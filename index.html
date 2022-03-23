@@ -33,20 +33,26 @@
     </style>
   </head>
   <body>
-    <h2>Send @dtinth an encrypted message</h2>
+    <p>
+      Use this form to send
+      <a href="https://dt.in.th" style="text-decoration: none; color: #8b8685"
+        >@<strong style="color: #d7fc70">dtinth</strong></a
+      >
+      an encrypted message:
+    </p>
     <script src="vendor/nacl.js"></script>
     <script src="vendor/nacl-util.js"></script>
 
     <form onsubmit="return false">
       <p>
         <label>
-          <span class="dim">Message</span><br />
+          <span class="dim">Your message</span><br />
           <textarea id="in"></textarea>
         </label>
       </p>
       <p>
         <label>
-          <span class="dim">Encrypted</span><br />
+          <span class="dim">Encrypted version</span><br />
           <textarea id="out" readonly></textarea>
         </label>
         <button onclick="copyIt()">Copy</button>

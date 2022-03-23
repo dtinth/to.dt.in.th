@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html data-dtinth>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Send me a encrypted message</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Cousine&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/combine/npm/water.css@2.0/out/dark.min.css,gh/dtinth/dtinth-water@v0.1/dtinth-water.min.css"
+    />
+    <style>
+      textarea {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+      }
+      label {
+        display: block !important;
+      }
+      .dim {
+        color: #8b8685;
+      }
+      code,
+      textarea {
+        font-family: Cousine, sans-serif !important;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Send @dtinth an encrypted message</h2>
+    <script src="vendor/nacl.js"></script>
+    <script src="vendor/nacl-util.js"></script>
+
+    <form onsubmit="return false">
+      <p>
+        <label>
+          <span class="dim">Message</span><br />
+          <textarea id="in"></textarea>
+        </label>
+      </p>
+      <p>
+        <label>
+          <span class="dim">Encrypted</span><br />
+          <textarea id="out" readonly></textarea>
+        </label>
+        <button onclick="copyIt()">Copy</button>
+      </p>
+      <p><span class="dim">Public key:</span> <code id="pkx"></code></p>
+    </form>
+
+    <script>
+      const inInput = document.querySelector('#in')
+      const outBox = document.querySelector('#out')
+      const publicKey = 'dt/MosttVjYEdQnQvY+sKAYXhxm8sCOPjqje+3VtFns='
+      const pk = nacl.util.decodeBase64(publicKey)
+      let last
+
+      function update() {
+        const text = inInput.value
+        const reusable = last && last.text === text
+        const keys = reusable ? last.keys : nacl.box.keyPair()
+        const nonce = reusable
+          ? last.nonce
+          : nacl.randomBytes(nacl.secretbox.nonceLength)
+        last = { text, nonce, keys }
+        const message = nacl.util.decodeUTF8(text)
+        const sk = keys.secretKey
+        const output = nacl.box(message, nonce, pk, sk)
+        outBox.value = [keys.publicKey, nonce, output].map(encode).join('')
+      }
+      inInput.oninput = inInput.onchange = update
+      update()
+
+      function encode(array) {
+        let out = ''
+        const ch = [
+          '♩',
+          '♪',
+          '♫',
+          '♭',
+          '𝄫',
+          '♮',
+          '♯',
+          '𝄞',
+          '𝄢',
+          '𝄡',
+          '𝄴',
+          '𝄵',
+          '𝄽',
+          '𝄾',
+          '𝄿',
+          '𝅀',
+        ]
+        for (let i = 0; i < array.length; i++) {
+          let x = array[i]
+          let a = ~~(x / 16)
+          let b = x % 16
+          out += ch[a] + ch[b]
+        }
+        return out
+      }
+
+      function copyIt() {
+        outBox.focus()
+        outBox.select()
+        document.execCommand('copy')
+      }
+
+      document.querySelector('#pkx').textContent = publicKey
+    </script>
+  </body>
+</html>

@@ -78,7 +78,8 @@
         const message = nacl.util.decodeUTF8(text)
         const sk = keys.secretKey
         const output = nacl.box(message, nonce, pk, sk)
-        outBox.value = [keys.publicKey, nonce, output].map(encode).join('')
+        outBox.value =
+          '◔' + [keys.publicKey, nonce, output].map(encode).join('') + '◕'
       }
       inInput.oninput = inInput.onchange = update
       update()
@@ -86,22 +87,22 @@
       function encode(array) {
         let out = ''
         const ch = [
-          '♩',
-          '♪',
-          '♫',
-          '♭',
-          '𝄫',
-          '♮',
-          '♯',
-          '𝄞',
-          '𝄢',
-          '𝄡',
-          '𝄴',
-          '𝄵',
-          '𝄽',
-          '𝄾',
-          '𝄿',
-          '𝅀',
+          '◰',
+          '◱',
+          '◲',
+          '◳',
+          '◴',
+          '◵',
+          '◶',
+          '◷',
+          '◸',
+          '◹',
+          '◺',
+          '◿',
+          '◢',
+          '◣',
+          '◤',
+          '◥',
         ]
         for (let i = 0; i < array.length; i++) {
           let x = array[i]

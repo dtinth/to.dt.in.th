@@ -2,7 +2,11 @@
 
 A web application that lets users send an encrypted message to [@dtinth](https://github.com/dtinth).
 
-[<img width="834" alt="image" src="https://user-images.githubusercontent.com/193136/159828360-b1848ccc-9149-4358-a651-402829f078ca.png">](https://to.dt.in.th)
+[<img width="839" alt="image" src="https://user-images.githubusercontent.com/193136/159846649-ab8a27fe-2b5d-4607-a606-c7f3e7845418.png">](https://to.dt.in.th)
+
+## Why?
+
+Sometimes people send me passwords over instant messaging apps or email. To make things a little bit more secure, I need a short URL that I can send people to where they can encrypt a message in a way that only I can decrypt it.
 
 ## How it works
 

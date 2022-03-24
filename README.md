@@ -10,4 +10,4 @@ Sometimes people send me passwords over instant messaging apps or email. To make
 
 ## How it works
 
-A [TweetNaCl.js box](https://tweetnacl.js.org/#/box) is used to encrypt a message with a randomized public key and nonce. The result is then converted to hex with a defined symbol set. All source code is not minified and included within the repo (except the stylesheets).
+A [TweetNaCl.js box](https://tweetnacl.js.org/#/box) is used to encrypt a message with a randomized public key and nonce. The resulting binary is then encoded using the [Braille Patterns Unicode block](https://en.wikipedia.org/wiki/Braille_Patterns). All source code is not minified and included within the repo (except the stylesheets).

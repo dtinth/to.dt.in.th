@@ -27,7 +27,7 @@ const decode = (ciphertext) => {
     )
     return Buffer.from([...m[1]].map((x) => chars.get(x) || '').join(''), 'hex')
   }
-  if ((m = ciphertext.match(/⡇([^]*)⢸/))) {
+  if ((m = ciphertext.match(/(?:⡇|⡏)([^]*)(?:⢸|⣸)/))) {
     return Buffer.from(
       [...m[1]].flatMap((x) => {
         const charCode = x.charCodeAt(0)

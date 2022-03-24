@@ -114,9 +114,14 @@
             }
             return out
           },
-          wrap: (x) => '⡇' + x + '⢸',
+          wrap: (x) => '⡏' + x + '⣸',
         },
       }
+
+      const codecName = new URLSearchParams(location.search).get('codec')
+      const codec = Object.keys(codecs).includes(codecName)
+        ? codecs[codecName]
+        : codecs.braille
 
       function update() {
         const text = inInput.value
@@ -131,7 +136,6 @@
         const message = nacl.util.decodeUTF8(padding + text)
         const sk = keys.secretKey
         const output = nacl.box(message, nonce, pk, sk)
-        const codec = codecs.braille
         outBox.value = codec.wrap(
           [keys.publicKey, nonce, output].map(codec.encode).join(''),
         )

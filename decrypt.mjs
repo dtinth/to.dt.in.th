@@ -39,5 +39,6 @@ const sk = Buffer.from(
 const pk = buffer.slice(0, 32)
 const nonce = buffer.slice(32, 56)
 const msg = buffer.slice(56)
-
-console.log(Buffer.from(nacl.box.open(msg, nonce, pk, sk)).toString())
+const str = Buffer.from(nacl.box.open(msg, nonce, pk, sk)).toString()
+const pad = str.match(/^=*>/)[0]
+console.log(str.slice(pad.length))

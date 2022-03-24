@@ -60,6 +60,12 @@
       <p><span class="dim">Public key:</span> <code id="pkx"></code></p>
     </form>
 
+    <p>
+      <a href="https://github.com/dtinth/to.dt.in.th#how-it-works"
+        >How does it work?</a
+      >
+    </p>
+
     <script>
       const inInput = document.querySelector('#in')
       const outBox = document.querySelector('#out')
@@ -75,7 +81,9 @@
           ? last.nonce
           : nacl.randomBytes(nacl.secretbox.nonceLength)
         last = { text, nonce, keys }
-        const message = nacl.util.decodeUTF8(text)
+        const paddedLength = Math.ceil(Math.max(text.length, 32) / 8) * 8
+        const padding = '='.repeat(paddedLength - text.length) + '>'
+        const message = nacl.util.decodeUTF8(padding + text)
         const sk = keys.secretKey
         const output = nacl.box(message, nonce, pk, sk)
         outBox.value =

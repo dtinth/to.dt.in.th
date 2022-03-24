@@ -1,6 +1,6 @@
 # [to.dt.in.th](https://to.dt.in.th)
 
-A web application that lets user sends an encrypted message to [@dtinth](https://github.com/dtinth).
+A web application that lets users send an encrypted message to [@dtinth](https://github.com/dtinth).
 
 [<img width="834" alt="image" src="https://user-images.githubusercontent.com/193136/159828360-b1848ccc-9149-4358-a651-402829f078ca.png">](https://to.dt.in.th)
 

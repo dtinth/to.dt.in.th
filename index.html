@@ -73,6 +73,51 @@
       const pk = nacl.util.decodeBase64(publicKey)
       let last
 
+      const codecs = {
+        geoshapes: {
+          encode: (array) => {
+            let out = ''
+            const ch = [
+              '◰',
+              '◱',
+              '◲',
+              '◳',
+              '◴',
+              '◵',
+              '◶',
+              '◷',
+              '◸',
+              '◹',
+              '◺',
+              '◿',
+              '◢',
+              '◣',
+              '◤',
+              '◥',
+            ]
+            for (let i = 0; i < array.length; i++) {
+              let x = array[i]
+              let a = ~~(x / 16)
+              let b = x % 16
+              out += ch[a] + ch[b]
+            }
+            return out
+          },
+          wrap: (x) => '◔' + x + '◕',
+        },
+        braille: {
+          encode: (array) => {
+            let out = ''
+            for (let i = 0; i < array.length; i++) {
+              let x = array[i]
+              out += String.fromCharCode(x + 0x2800)
+            }
+            return out
+          },
+          wrap: (x) => '⡇' + x + '⢸',
+        },
+      }
+
       function update() {
         const text = inInput.value
         const reusable = last && last.text === text
@@ -86,40 +131,13 @@
         const message = nacl.util.decodeUTF8(padding + text)
         const sk = keys.secretKey
         const output = nacl.box(message, nonce, pk, sk)
-        outBox.value =
-          '◔' + [keys.publicKey, nonce, output].map(encode).join('') + '◕'
+        const codec = codecs.braille
+        outBox.value = codec.wrap(
+          [keys.publicKey, nonce, output].map(codec.encode).join(''),
+        )
       }
       inInput.oninput = inInput.onchange = update
       update()
-
-      function encode(array) {
-        let out = ''
-        const ch = [
-          '◰',
-          '◱',
-          '◲',
-          '◳',
-          '◴',
-          '◵',
-          '◶',
-          '◷',
-          '◸',
-          '◹',
-          '◺',
-          '◿',
-          '◢',
-          '◣',
-          '◤',
-          '◥',
-        ]
-        for (let i = 0; i < array.length; i++) {
-          let x = array[i]
-          let a = ~~(x / 16)
-          let b = x % 16
-          out += ch[a] + ch[b]
-        }
-        return out
-      }
 
       function copyIt() {
         outBox.focus()

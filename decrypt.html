@@ -44,10 +44,56 @@
           <span class="dim">Ciphertext</span><br />
           <textarea id="in"></textarea>
         </label>
-        <button onclick="decryptAndCopy()">Copy</button>
+        <button onclick="decryptAndCopy(this)">Copy</button>
       </p>
     </form>
 
-    <script></script>
+    <script>
+      const inInput = document.querySelector('#in')
+      const encryptedSk = `-----BEGIN AGE ENCRYPTED FILE-----
+YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IGFnZS1lbmNyeXB0aW9uLm9yZy9maWRv
+MnByZiBKczdJL2N1aUZMSlFlbUxuc2YxdkF3Clh3YnFlbVVqbWk0ZCs3WE9ZcW9W
+eVBpaVVOVDZqTmJBOGMyd29GR24rT1EKLS0tIEdDcDBMMGFjU2Vmc0xwaTJpZ3Uw
+U2x4TWExV1lWVEVYVHhCbjVvRnZKK3cKOthjAv2TdRczs7AcYQQi8OZ6YtRinFm6
+GSGUr2h4EH7IPd0xkzx8oOsxcEE6h12CpQdUbssu8MT4Wck21bWJaO8vuAecjpDH
+EQnU6Q==
+-----END AGE ENCRYPTED FILE-----`
+
+      const decode = (ciphertext) => {
+        if ((m = ciphertext.match(/(?:⡇|⡏)([^]*)(?:⢸|⣸)/))) {
+          return Uint8Array.from(
+            [...m[1]].flatMap((x) => {
+              const charCode = x.charCodeAt(0)
+              return charCode >= 0x2800 && charCode <= 0x28ff
+                ? [charCode - 0x2800]
+                : []
+            }),
+          )
+        }
+      }
+
+      async function decryptAndCopy(btn) {
+        try {
+          const d = new age.Decrypter()
+          d.addIdentity(new age.webauthn.WebAuthnIdentity())
+          const sk = nacl.util.decodeBase64(
+            await d.decrypt(age.armor.decode(encryptedSk), 'text'),
+          )
+          const buffer = decode(inInput.value)
+          const pk = buffer.slice(0, 32)
+          const nonce = buffer.slice(32, 56)
+          const msg = buffer.slice(56)
+          const decryptedBuf = nacl.box.open(msg, nonce, pk, sk)
+          const str = new TextDecoder().decode(decryptedBuf)
+          const pad = str.match(/^=*>/)[0]
+          await navigator.clipboard.writeText(str.slice(pad.length))
+          btn.textContent = 'Copied!'
+          setTimeout(() => (btn.textContent = 'Copy'), 2000)
+        } catch (error) {
+          console.error(error)
+          alert('Decryption failed: ' + String(error))
+        }
+      }
+    </script>
   </body>
 </html>
